@@ -8,42 +8,25 @@ const client = new Client({
   ]
 });
 
-// حط آيديات الرومات هنا
-const VOICE_CHANNELS = [
-  "1510694717569106005",
-  "1510694717569106001",
-  "1510694717569106006",
-  "1510694717569106004",
-  "1510694717569106000",
-];
+// حط آيدي الروم الصوتي هنا
+const VOICE_ID = "1510694717569106005";
 
 client.once('clientReady', async () => {
-  console.log(`✅ تم تسجيل الدخول: ${client.user.tag}`);
+  console.log(`✅ تم تسجيل الدخول ${client.user.tag}`);
 
-  for (const channelId of VOICE_CHANNELS) {
-    try {
-      const channel = await client.channels.fetch(channelId);
+  const channel = await client.channels.fetch(VOICE_ID);
 
-      if (!channel) {
-        console.log(`❌ لم يتم العثور على الروم: ${channelId}`);
-        continue;
-      }
+  if (!channel) return console.log("❌ ما حصلت الروم");
 
-      joinVoiceChannel({
-        channelId: channel.id,
-        guildId: channel.guild.id,
-        adapterCreator: channel.guild.voiceAdapterCreator,
-        selfMute: false, // المايك مفتوح
-        selfDeaf: false  // غير مكتوم
-      });
+  joinVoiceChannel({
+    channelId: channel.id,
+    guildId: channel.guild.id,
+    adapterCreator: channel.guild.voiceAdapterCreator,
+    selfMute: false, // غير مكتوم
+    selfDeaf: true   // دفن أحمر
+  });
 
-      console.log(`✅ دخل الروم: ${channel.name}`);
-
-    } catch (err) {
-      console.log(`❌ خطأ في الروم ${channelId}`);
-      console.error(err);
-    }
-  }
+  console.log("✅ دخل الروم بنجاح");
 });
 
 client.login(process.env.TOKEN);
